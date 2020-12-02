@@ -10,7 +10,7 @@ def run(f)
     password = m[4]
     count = password.count(letter)
     valid_sled_passwords += 1 if count >= a && count <= b
-    valid_toboggan_passwords += 1 if (password[a - 1] == letter) ? password[b - 1] != letter : password[b - 1] == letter
+    valid_toboggan_passwords += 1 if (password[a - 1] == letter) ^ (password[b - 1] == letter)
   end
 
   [ valid_sled_passwords, valid_toboggan_passwords ]
