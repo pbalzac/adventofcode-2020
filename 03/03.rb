@@ -1,9 +1,5 @@
 def run(f)
-  map = []
-  File.readlines(f).each do |line|
-    line.strip!
-    map << line
-  end
+  map = File.read(f).lines(chomp: true)
 
   trees_encountered = Array.new
   map_width = map[0].length
