@@ -8,24 +8,12 @@ class Seat
   end
 end
 
-def getnum(code, low_value)
-  v = 2 ** code.length
-  range_start = 0
-  range_end = v - 1
-  code.chars.each do |c|
-    v /= 2
-    if c == low_value
-      range_end -= v
-    else
-      range_start += v
-    end
-  end
-  raise if range_start != range_end
-  range_start
+def getnum(code, low_value, high_value)
+  code.gsub(low_value, '0').gsub(high_value, '1').to_i(2)
 end
 
 def get_seat(code)
-  Seat.new(getnum(code[0, 7], 'F'), getnum(code[7, 3], 'L'))
+  Seat.new(getnum(code[0, 7], 'F', 'B'), getnum(code[7, 3], 'L', 'R'))
 end
 
 def run(f)
