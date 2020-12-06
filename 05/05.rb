@@ -9,7 +9,7 @@ class Seat
 end
 
 def getnum(code, low_value, high_value)
-  code.gsub(low_value, '0').gsub(high_value, '1').to_i(2)
+  code.gsub(/\w/, { low_value => '0', high_value => '1' }).to_i(2)
 end
 
 def get_seat(code)
