@@ -3,13 +3,12 @@ $memo = Hash.new
 def combinations(value, final, list)
   key = [ value, final, list ]
   return $memo[key] if !$memo[key].nil?
-  
+
   final_reachable = (final - value) <= 3
-  return final_reachable ? 1 : 0 if list.empty?
+  combos = final_reachable ? 1 : 0
+  return combos if list.empty?
   
   next_adapters = list.filter { |n| n - value <= 3 }
-
-  combos = final_reachable ? 1 : 0
   combos += next_adapters
               .map { |n| combinations(n, final, list.filter { |l| l > n }) }
               .reduce(:+)
