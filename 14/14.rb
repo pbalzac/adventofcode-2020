@@ -10,10 +10,8 @@ def mask_it(mask, num)
 end
 
 def mask_two(mask, num, memory, address)
-  mask.select { |bit, val| val != 'X' }.each { |bit, val|
-    if val == '1'
-      address = address | (1 << bit)
-    end
+  mask.select { |bit, val| val == '1' }.keys.each { |bit|
+    address = address | (1 << bit)
   }
   addresses = [ address ]
   mask.select { |bit, val| val == 'X' }.keys.each { |bit|
