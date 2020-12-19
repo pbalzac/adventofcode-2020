@@ -1,22 +1,6 @@
 Node = Struct.new(:subrules, :value, keyword_init: true)
 
-def match(rules, rule_number, s)
-  return_val = nil
-  rule = rules[rule_number]
-  if rule.subrules.nil?
-    if s.start_with?(rule.value)
-      return_val = s[rule.value.length..-1]
-    end
-  else
-    rule.subrules.each { |sr|
-      return_val = sr.reduce(s) { |s, r| s.nil? ? nil : match(rules, r, s) }
-      break if !return_val.nil?
-    }
-  end
-  return_val
-end
-
-def match2(rules, rule_number, ss)
+def match(rules, rule_number, ss)
   ss.map{ |s|
     return_val = Array.new
     rule = rules[rule_number]
@@ -26,7 +10,7 @@ def match2(rules, rule_number, ss)
       end
     else
       return_val = rule.subrules.map { |sr|
-        sr.reduce([s]) { |s, r| s.nil? ? nil : match2(rules, r, s) }
+        sr.reduce([s]) { |s, r| s.nil? ? nil : match(rules, r, s) }
       }.compact
     end
     return_val
@@ -53,19 +37,19 @@ def run(f)
     end
   }
 
-  matches = tests.filter{ |s|
-    test = match(rules, 0, s)
-    !test.nil? && test.length.zero?
+  original_matches = tests.filter{ |s|
+    test = match(rules, 0, [s])
+    test.any? { |s| s.length.zero? }
   }
- 
+   
   rules[8] = Node.new(subrules: [ [42], [42, 8]])
   rules[11] = Node.new(subrules: [ [42, 31], [42, 11, 31] ])
 
   loop_matches = tests.filter{ |s|
-    test = match2(rules, 0, [s])
+    test = match(rules, 0, [s])
     test.any? { |s| s.length.zero? }
   }
 
-  [ matches.length, loop_matches.length ]
+  [ original_matches.length, loop_matches.length ]
   
 end
