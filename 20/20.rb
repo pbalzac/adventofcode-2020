@@ -33,6 +33,35 @@ def printg(g)
   puts
 end
 
+$dragon_coords =  [ [18, 0], [0, 1], [5, 1], [6, 1], [11, 1], [12, 1], [17, 1], [18, 1], [19, 1],
+                    [1, 2], [4, 2], [7, 2], [10, 2], [13, 2], [16, 2] ]
+$dragon_w = 20
+$dragon_h = 3
+def find_dragons(image)
+  here_be_dragons = Array.new
+  (0..image.length - $dragon_h).each { |y|
+    (0..image[0].length - $dragon_w).each { |x|
+      if $dragon_coords.all? { |cx, cy|
+          image[cy + y][cx + x] == '#' }
+        here_be_dragons << [x, y]
+      end
+    }
+  }
+  here_be_dragons
+end
+
+def replace_dragons(image, dragons)
+  dragons.each { |x, y|
+    $dragon_coords.each { |dx, dy|
+      image[y + dy][x + dx] = 'O'
+    }
+  }
+end
+
+def turbulence(image)
+  image.map{ |l| l.count('#') }.reduce(:+)
+end
+
 def all(grid)
   all = Array.new
   all << grid
@@ -129,5 +158,28 @@ def run(f)
     zz.reduce(:*)
   }.uniq
 
-  [ four_corners ]
+
+  image = Array.new
+  tile_size = tiles.values[0][0][0].length
+  line_groups[0].each { |lg|
+    (1...tile_size - 1).each { |i|
+      image << lg.reduce('') { |a, t| a + tiles[t[0]][t[1]][i][1..-2] }
+    }
+  }
+
+  rotations = all(image)
+
+  final_image = nil
+  dragons = nil
+  rotations.each { |r|
+    dragons = find_dragons(r)
+    final_image = r
+    break if !dragons.empty?
+  }
+
+  replace_dragons(final_image, dragons)
+
+  printg(final_image)
+  
+  [ four_corners[0], turbulence(final_image) ]
 end
