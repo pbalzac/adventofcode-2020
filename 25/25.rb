@@ -4,9 +4,6 @@ def run(f)
   card = data[0].to_i
   door = data[1].to_i
 
- # card = 5764801
- # door = 17807724
-
   v = 1
   loop = 0
   sn = 7
@@ -27,8 +24,6 @@ def run(f)
   end
 
   door_loop = loop
-
-  p [card_loop, door_loop]
 
   sn = card
   v = 1
